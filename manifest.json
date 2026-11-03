@@ -1,0 +1,8 @@
+{
+  "name": "ERTH AI",
+  "short_name": "ERTH AI",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#080b16",
+  "theme_color": "#080b16"
+}
