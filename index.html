@@ -1,0 +1,402 @@
+<<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ERTH AI</title>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#080b16">
+
+<style>
+*{box-sizing:border-box}
+
+body{
+ margin:0;
+ background:#080b16;
+ color:white;
+ font-family:Arial,sans-serif;
+}
+
+header{
+ padding:20px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ border-bottom:1px solid #26334b;
+}
+
+.logo{
+ color:#65b9ff;
+ font-size:25px;
+ font-weight:bold;
+}
+
+.menu{
+ color:#aab4ca;
+ font-size:14px;
+}
+
+main{padding:20px}
+
+h1{font-size:32px;margin-bottom:8px}
+.sub{color:#aab4ca}
+
+.section{
+ display:none;
+ margin-top:25px;
+}
+
+.section.active{display:block}
+
+.card{
+ background:#151c2d;
+ padding:20px;
+ border-radius:16px;
+ margin-top:15px;
+ border:1px solid #29344b;
+}
+
+.card h3{margin-top:0}
+
+input,textarea,select{
+ width:100%;
+ padding:15px;
+ border-radius:12px;
+ border:1px solid #39445c;
+ background:#151c2d;
+ color:white;
+ font-size:16px;
+ margin-top:10px;
+}
+
+button{
+ padding:14px;
+ border:0;
+ border-radius:12px;
+ background:#388df5;
+ color:white;
+ font-size:15px;
+ margin-top:10px;
+ width:100%;
+}
+
+.secondary{background:#29344b}
+
+.chat-box{
+ display:flex;
+ flex-direction:column;
+ gap:12px;
+ margin-top:20px;
+}
+
+.user-msg,.ai-msg{
+ padding:13px;
+ border-radius:14px;
+ max-width:90%;
+ overflow-wrap:anywhere;
+}
+
+.user-msg{
+ align-self:flex-end;
+ background:#2879df;
+}
+
+.ai-msg{
+ align-self:flex-start;
+ background:#202b40;
+}
+
+nav{
+ position:fixed;
+ bottom:0;
+ left:0;
+ width:100%;
+ background:#111a2b;
+ display:grid;
+ grid-template-columns:repeat(5,1fr);
+ padding:10px 3px;
+ border-top:1px solid #29344b;
+}
+
+nav button{
+ background:transparent;
+ color:#aab4ca;
+ font-size:11px;
+ padding:9px 2px;
+ margin:0;
+}
+
+nav button.selected{color:#65b9ff}
+
+.content{padding-bottom:90px}
+
+.small{font-size:13px;color:#aab4ca}
+</style>
+</head>
+
+<body>
+
+<header>
+ <div class="logo">✦ ERTH AI</div>
+ <div class="menu">YOUR AI WORLD</div>
+</header>
+
+<div class="content">
+<main>
+
+<!-- HOME -->
+<div id="home" class="section active">
+
+ <h1>Meet Your AI.</h1>
+ <p class="sub">Your world. Your intelligence.</p>
+
+ <div class="card">
+  <h3>💬 AI Chat</h3>
+  <p class="sub">Ask questions. Explore ideas.</p>
+  <button onclick="showSection('chat')">Start Chat</button>
+ </div>
+
+ <div class="card">
+  <h3>🎨 AI Images</h3>
+  <p class="sub">Turn your imagination into images.</p>
+  <button onclick="showSection('images')">Explore Images</button>
+ </div>
+
+ <div class="card">
+  <h3>🎬 AI Videos</h3>
+  <p class="sub">Bring your ideas to life.</p>
+  <button onclick="showSection('videos')">Explore Videos</button>
+ </div>
+
+ <div class="card">
+  <h3>🎙️ AI Voice</h3>
+  <p class="sub">Experience conversations with voice.</p>
+  <button onclick="showSection('voice')">Explore Voice</button>
+ </div>
+
+</div>
+
+<!-- CHAT -->
+<div id="chat" class="section">
+
+ <h1>AI Chat 💬</h1>
+ <p class="sub">Talk with ERTH AI.</p>
+
+ <div class="chat-box" id="chatBox"></div>
+
+ <input id="message" placeholder="Ask anything...">
+
+ <button onclick="send()">Send Message ➜</button>
+ <button class="secondary" onclick="newChat()">＋ New Chat</button>
+
+</div>
+
+<!-- HISTORY -->
+<div id="history" class="section">
+
+ <h1>Chat History</h1>
+ <p class="sub">Your recent conversations.</p>
+
+ <div class="card" id="historyBox">
+  <p class="small">Your conversations will appear here.</p>
+ </div>
+
+ <button class="secondary" onclick="clearHistory()">Clear History</button>
+
+</div>
+
+<!-- IMAGES -->
+<div id="images" class="section">
+
+ <h1>AI Images 🎨</h1>
+ <p class="sub">Create images from your imagination.</p>
+
+ <div class="card">
+  <textarea id="imagePrompt" placeholder="Describe your image..."></textarea>
+  <button onclick="demoMessage()">Generate Image</button>
+  <p class="small">Image generation service will be connected later.</p>
+ </div>
+
+</div>
+
+<!-- VIDEOS -->
+<div id="videos" class="section">
+
+ <h1>AI Videos 🎬</h1>
+ <p class="sub">Create videos from your ideas.</p>
+
+ <div class="card">
+  <textarea id="videoPrompt" placeholder="Describe your video..."></textarea>
+  <button onclick="demoMessage()">Generate Video</button>
+  <p class="small">Video generation service will be connected later.</p>
+ </div>
+
+</div>
+
+<!-- VOICE -->
+<div id="voice" class="section">
+
+ <h1>AI Voice 🎙️</h1>
+ <p class="sub">Your voice experience.</p>
+
+ <div class="card">
+
+  <select id="language">
+   <option value="hi-IN">Hindi</option>
+   <option value="en-US">English</option>
+   <option value="ur-PK">Urdu</option>
+   <option value="pa-IN">Punjabi</option>
+  </select>
+
+  <button onclick="startVoice()">🎙️ Start Speaking</button>
+
+  <p id="voiceStatus" class="small">Voice feature is experimental.</p>
+
+ </div>
+
+</div>
+
+<!-- SETTINGS -->
+<div id="settings" class="section">
+
+ <h1>Settings ⚙️</h1>
+
+ <div class="card">
+  <h3>About ERTH AI</h3>
+  <p class="sub">Your world. Your intelligence.</p>
+  <p class="small">Version 2.0</p>
+ </div>
+
+ <div class="card">
+  <h3>Language</h3>
+  <select>
+   <option>English</option>
+   <option>Hindi</option>
+   <option>Urdu</option>
+   <option>Punjabi</option>
+  </select>
+ </div>
+
+</div>
+
+</main>
+</div>
+
+<!-- NAVIGATION -->
+<nav>
+ <button class="selected" onclick="showSection('home',this)">⌂<br>Home</button>
+ <button onclick="showSection('chat',this)">💬<br>Chat</button>
+ <button onclick="showSection('history',this)">◷<br>History</button>
+ <button onclick="showSection('images',this)">🎨<br>Create</button>
+ <button onclick="showSection('settings',this)">⚙️<br>Settings</button>
+</nav>
+
+<script>
+
+let conversations=[];
+
+function showSection(id,button){
+
+ document.querySelectorAll(".section").forEach(section=>{
+  section.classList.remove("active");
+ });
+
+ document.getElementById(id).classList.add("active");
+
+ document.querySelectorAll("nav button").forEach(btn=>{
+  btn.classList.remove("selected");
+ });
+
+ if(button)button.classList.add("selected");
+}
+
+function send(){
+
+ const box=document.getElementById("message");
+ const chat=document.getElementById("chatBox");
+ const msg=box.value.trim();
+
+ if(!msg)return;
+
+ const user=document.createElement("div");
+ user.className="user-msg";
+ user.innerText=msg;
+ chat.appendChild(user);
+
+ const ai=document.createElement("div");
+ ai.className="ai-msg";
+ ai.innerText="ERTH AI: I'm listening! Real AI connection is coming soon.";
+ chat.appendChild(ai);
+
+ conversations.push(msg);
+ updateHistory();
+
+ box.value="";
+}
+
+function newChat(){
+ document.getElementById("chatBox").innerHTML="";
+ document.getElementById("message").value="";
+}
+
+function updateHistory(){
+
+ const history=document.getElementById("historyBox");
+ history.innerHTML="";
+
+ conversations.forEach((msg,index)=>{
+  const item=document.createElement("p");
+  item.innerText=(index+1)+". "+msg;
+  history.appendChild(item);
+ });
+
+}
+
+function clearHistory(){
+ conversations=[];
+ updateHistory();
+}
+
+function demoMessage(){
+ alert("This feature will be connected to an AI service soon!");
+}
+
+function startVoice(){
+
+ const status=document.getElementById("voiceStatus");
+
+ const Recognition=window.SpeechRecognition || window.webkitSpeechRecognition;
+
+ if(!Recognition){
+  status.innerText="Speech recognition is not supported in this browser.";
+  return;
+ }
+
+ const recognition=new Recognition();
+ recognition.lang=document.getElementById("language").value;
+
+ status.innerText="Listening...";
+
+ recognition.onresult=function(event){
+  status.innerText="You said: "+event.results[0][0].transcript;
+ };
+
+ recognition.onerror=function(){
+  status.innerText="Voice recognition could not start.";
+ };
+
+ recognition.start();
+}
+
+</script>
+
+<script>
+if ("serviceWorker" in navigator) {
+ navigator.serviceWorker.register("./sw.js");
+}
+</script>
+
+</body>
+</html>
